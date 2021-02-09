@@ -24,26 +24,20 @@ function complete() {
     }
 }
 
-//Random Number Generator (Up to 6 digits)
-function randomNum() {
-    const num = Math.floor(Math.random()*1643 - 1)
-    return num;
-}
-
 // Get Quote From API
 async function getQuote() {
     loading();
 
-    const apiUrl = `https://type.fit/api/quotes`;
+    const apiUrl = `https://freequote.herokuapp.com/`;
 
     try {
         const res = await fetch(apiUrl);
         const data = await res.json();
-        const quote = data[randomNum()];
+        console.log(data);
         
-        quoteText.innerText = quote.text;
+        quoteText.innerText = data.quote;
         //If author is blank add 'Unknown'
-        quote.author !== null ? authorText.innerText = quote.author : authorText.innerText = 'Unknown';
+        data.author !== "" ? authorText.innerText = data.author : authorText.innerText = 'Unknown';
 
         if (quoteText.innerText.length > 120) {
             quoteText.classList.add('long-quote');
@@ -55,7 +49,6 @@ async function getQuote() {
     } catch (e) {
         if (!quoteText.innerText.length) {
             getQuote();
-            return;
         }
     }
 }
