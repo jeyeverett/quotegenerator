@@ -10,14 +10,12 @@ const loader = document.getElementById('loader');
 newQuoteButton.addEventListener('click', getQuote);
 twitterButton.addEventListener('click', tweetQuote);
 
-//Show loading
-function loading() {
+function showLoadingSpinner() {
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
-//Hide loading
-function complete() {
+function removeLoadingSpinner() {
     if (!loader.hidden) {
         quoteContainer.hidden = false;
         loader.hidden = true;
@@ -26,14 +24,13 @@ function complete() {
 
 // Get Quote From API
 async function getQuote() {
-    loading();
+    showLoadingSpinner();
 
     const apiUrl = `https://freequote.herokuapp.com/`;
 
     try {
         const res = await fetch(apiUrl);
         const data = await res.json();
-        console.log(data);
         
         quoteText.innerText = data.quote;
         //If author is blank add 'Unknown'
@@ -45,10 +42,14 @@ async function getQuote() {
             quoteText.classList.remove('long-quote');
         }
         //Stop loader and show quote
-        complete();
+        removeLoadingSpinner();
     } catch (e) {
         if (!quoteText.innerText.length) {
             getQuote();
+        } else {
+            quoteText.innerText = 'Sorry, something went wrong.';
+            authorText.innerText = 'Please refresh the page.';
+            return;
         }
     }
 }
