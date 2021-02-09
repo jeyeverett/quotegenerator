@@ -1,11 +1,28 @@
 //DOM
+const quoteContainer = document.getElementById('quote-container');
 const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
 const twitterButton = document.getElementById('twitter');
 const newQuoteButton = document.getElementById('new-quote');
+const loader = document.getElementById('loader');
 
+//Event listeners
 newQuoteButton.addEventListener('click', getQuote);
 twitterButton.addEventListener('click', tweetQuote);
+
+//Show loading
+function loading() {
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+}
+
+//Hide loading
+function complete() {
+    if (!loader.hidden) {
+        quoteContainer.hidden = false;
+        loader.hidden = true;
+    }
+}
 
 //Random Number Generator (Up to 6 digits)
 function randomNum() {
@@ -15,6 +32,7 @@ function randomNum() {
 
 // Get Quote From API
 async function getQuote() {
+    loading();
     const proxyUrl = 'http://api.allorigins.win/get?url='; //Need this tog et around the default CORS policy
     const apiUrl = `http://api.forismatic.com/api/1.0/?method=getQuote&key=${randomNum()}&lang=en&format=json`;
 
@@ -32,7 +50,8 @@ async function getQuote() {
         } else {
             quoteText.classList.remove('long-quote');
         }
-        
+        //Stop loader and show quote
+        complete();
     } catch (e) {
         if (!quoteText.innerText.length) {
             getQuote();
