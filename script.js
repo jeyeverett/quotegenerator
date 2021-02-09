@@ -27,7 +27,6 @@ function complete() {
 //Random Number Generator (Up to 6 digits)
 function randomNum() {
     const num = Math.floor(Math.random()*1643 - 1)
-    console.log(num);
     return num;
 }
 
@@ -41,7 +40,6 @@ async function getQuote() {
         const res = await fetch(apiUrl);
         const data = await res.json();
         const quote = data[randomNum()];
-        console.log(quote);
         
         quoteText.innerText = quote.text;
         //If author is blank add 'Unknown'
