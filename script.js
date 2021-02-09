@@ -26,24 +26,26 @@ function complete() {
 
 //Random Number Generator (Up to 6 digits)
 function randomNum() {
-    const num = Math.floor(Math.random()*100000 - 1)
+    const num = Math.floor(Math.random()*1643 - 1)
+    console.log(num);
     return num;
 }
 
 // Get Quote From API
 async function getQuote() {
     loading();
-    const proxyUrl = 'http://api.allorigins.win/get?url='; //Need this tog et around the default CORS policy
-    const apiUrl = `http://api.forismatic.com/api/1.0/?method=getQuote&key=${randomNum()}&lang=en&format=json`;
+
+    const apiUrl = `https://type.fit/api/quotes`;
 
     try {
-        const res = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+        const res = await fetch(apiUrl);
         const data = await res.json();
-        const quoteObj = JSON.parse(data.contents);
+        const quote = data[randomNum()];
+        console.log(quote);
         
-        quoteText.innerText = quoteObj.quoteText;
+        quoteText.innerText = quote.text;
         //If author is blank add 'Unknown'
-        quoteObj.quoteAuthor.length ? authorText.innerText = quoteObj.quoteAuthor : authorText.innerText = 'Unknown';
+        quote.author !== null ? authorText.innerText = quote.author : authorText.innerText = 'Unknown';
 
         if (quoteText.innerText.length > 120) {
             quoteText.classList.add('long-quote');
@@ -66,8 +68,6 @@ function tweetQuote() {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${quote} - ${author}`;
     window.open(twitterUrl, '_blank');
 }
-
-
 
 //On Load
 getQuote();
